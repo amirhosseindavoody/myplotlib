@@ -10,6 +10,8 @@ from matplotlib.axes import Axes
 from matplotlib.transforms import Bbox
 from .table import Table
 
+import pandas as pd
+
 
 def variability_chart(  # noqa: PLR0913
     ax: Axes,
@@ -23,8 +25,9 @@ def variability_chart(  # noqa: PLR0913
     marker_color: str = None,
     legend: str = None,
     line_width: float = 1,
+    iterate_marker_color: bool = False,
 ):
-    if marker_color is None:
+    if marker_color is None and (not iterate_marker_color):
         marker_color = ax._get_lines.get_next_color()
 
     if line_color is None:
@@ -110,3 +113,35 @@ def variability_chart(  # noqa: PLR0913
     ax.add_artist(table)
 
     return ax
+
+
+def dataframe_variability_chart(
+    df: pd.DataFrame,
+    groups: list[str],
+    values: list[str],
+    ax: Axes,
+    iterate_marker_color: bool = False,
+    marker_size: int = 5,
+):
+    xaxis = []
+    y_values = {value: [] for value in values}
+    for group, grouped_df in df.groupby(groups):
+        xaxis.append(group)
+        for value in values:
+            y_values[value].append(grouped_df[value].to_numpy())
+
+    for value in values:
+        variability_chart(
+            ax=ax,
+            xaxis=xaxis,
+            y_values=y_values[value],
+            table_height=1,
+            row_heights=[1, 0.5],
+            marker_size=marker_size,
+            marker_color=None,
+            legend=value,
+            iterate_marker_color=iterate_marker_color,
+        )
+
+        # Make this none so that next iterations does not make the xaxis table.
+        xaxis = None
