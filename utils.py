@@ -1,6 +1,7 @@
 import random
 import string
 import sys
+import os
 
 from loguru import logger
 
@@ -10,6 +11,21 @@ def random_id(n=6):
     alphabet = string.ascii_lowercase
 
     return "".join(random.choices(alphabet, k=n))
+
+
+def count_subfolders(directory_path):
+    # Get the list of items in the directory
+    items = os.listdir(directory_path)
+
+    # Filter out only the directories
+    subfolders = [
+        item for item in items if os.path.isdir(os.path.join(directory_path, item))
+    ]
+
+    # Count the number of subfolders
+    subfolder_count = len(subfolders)
+
+    return subfolder_count
 
 
 def setup_logger(filename):
