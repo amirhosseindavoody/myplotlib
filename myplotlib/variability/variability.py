@@ -123,6 +123,9 @@ def dataframe_variability_chart(
     iterate_marker_color: bool = False,
     marker_size: int = 5,
 ):
+    if not isinstance(ax, Axes):
+        raise TypeError("`ax` parameter must be of Axes type.")
+
     xaxis = []
     y_values = {value: [] for value in values}
     for group, grouped_df in df.groupby(groups):
