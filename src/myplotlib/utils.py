@@ -13,7 +13,7 @@ def random_id(n=6):
     return "".join(random.choices(alphabet, k=n))
 
 
-def count_subfolders(directory_path):
+def count_subfolders(directory_path: str):
     # Get the list of items in the directory
     items = os.listdir(directory_path)
 
